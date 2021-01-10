@@ -28,13 +28,13 @@ const UserArticlesService = {
       .first();
   },
 
-  insertSavedArticle(db, newSavedArticle) {
+  insertUserArticle(db, newUserArticle) {
     return db
-      .insert(newSavedArticle)
+      .insert(newUserArticle)
       .into("user_articles")
       .returning("*")
-      .then(([savedArticle]) => savedArticle)
-      .then((savedArticle) => UserArticlesService.getById(db, savedArticle.id));
+      .then(([userArticle]) => userArticle)
+      .then((userArticle) => UserArticlesService.getById(db, userArticle.id));
   },
 
   serializeReview(review) {
