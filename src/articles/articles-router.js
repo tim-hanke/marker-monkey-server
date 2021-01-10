@@ -3,23 +3,43 @@ const ArticlesService = require("./articles-service");
 const { requireAuth } = require("../middleware/jwt-auth");
 
 const router = express.Router();
+const jsonBodyParser = express.json();
 
 router
   .route("/")
   .all(requireAuth)
-  .get((req, res, next) => {
-    ArticlesService.getAllArticles(req.app.get("db"))
-      .then((things) => {
-        res.json(ArticlesService.serializeArticles(things));
-      })
-      .catch(next);
+  .get(async (req, res, next) => {
+    try {
+      const articles = await ArticlesService.getAllArticles(req.app.get("db"));
+
+      res.json(ArticlesService.serializeArticles(articles));
+    } catch (err) {
+      next(err);
+    }
+  })
+  .post(jsonBodyParser, async (req, res, next) => {
+    // find an existing article based on the URL
+    // if no, create new articles
+    // 1. fetch site metadata
+    // 2. insert new article into articles table
+    // insert new row into user_articles with article_id and user_id
+    try {
+      const article = await ArticlesService.getByUrl(
+        req.app.get("db"),
+        req.body.url
+      );
+      console.log(article);
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   });
 
 router
   .route("/:article_id")
   .all(requireAuth)
   .all(checkArticleExists)
-  .get((req, res) => {
+  .get((_req, res, _next) => {
     res.json(ArticlesService.serializeArticle(res.article));
   });
 

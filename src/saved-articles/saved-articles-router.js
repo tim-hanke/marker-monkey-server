@@ -15,7 +15,7 @@ savedArticlesRouter
         .status(400)
         .json({ error: "Missing article_id in request body" });
     }
-    const newReview = { article_id };
+    const newSavedArticle = { article_id };
 
     // for (const [key, value] of Object.entries(newReview))
     //   if (value == null)
@@ -23,14 +23,14 @@ savedArticlesRouter
     //       error: `Missing '${key}' in request body`,
     //     });
 
-    newReview.user_id = req.user.id;
+    newSavedArticle.user_id = req.user.id;
 
-    SavedArticlesService.insertReview(req.app.get("db"), newReview)
-      .then((review) => {
+    SavedArticlesService.insertSavedArticle(req.app.get("db"), newSavedArticle)
+      .then((savedArticle) => {
         res
           .status(201)
-          .location(path.posix.join(req.originalUrl, `/${review.id}`))
-          .json(SavedArticlesService.serializeReview(review));
+          .location(path.posix.join(req.originalUrl, `/${savedArticle.id}`))
+          .json(SavedArticlesService.serializeReview(savedArticle));
       })
       .catch(next);
   });

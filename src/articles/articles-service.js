@@ -5,21 +5,18 @@ const ArticlesService = {
   getAllArticles(db) {
     return db
       .from("articles AS art")
-      .select(
-        "art.id",
-        "art.url",
-        "art.image",
-        "art.title",
-        "art.description",
-        ...userFields
-      )
-      .leftJoin("saved_articles AS sav", "art.id", "sav.article_id")
-      .leftJoin("users AS usr", "art.user_id", "usr.id")
-      .groupBy("art.id", "usr.id");
+      .select("art.id", "art.url", "art.image", "art.title", "art.description");
+    // .leftJoin("saved_articles AS sav", "art.id", "sav.article_id")
+    // .leftJoin("users AS usr", "art.user_id", "usr.id")
+    // .groupBy("art.id", "usr.id");
   },
 
   getById(db, id) {
     return ArticlesService.getAllArticles(db).where("art.id", id).first();
+  },
+
+  getByUrl(db, url) {
+    return this.getAllArticles(db).where("art.url", url).first();
   },
 
   getByUserId(id) {
@@ -29,13 +26,7 @@ const ArticlesService = {
   getReviewsForThing(db, article_id) {
     return db
       .from("saved_articles AS rev")
-      .select(
-        "rev.id",
-        "rev.rating",
-        "rev.text",
-        "rev.date_created",
-        ...userFields
-      )
+      .select("rev.id", "rev.rating", "rev.text", "rev.date_created")
       .where("rev.article_id", article_id)
       .leftJoin("users AS usr", "rev.user_id", "usr.id")
       .groupBy("rev.id", "usr.id");

@@ -1,6 +1,6 @@
 const xss = require("xss");
 
-const ReviewsService = {
+const SavedArticleService = {
   getById(db, id) {
     return db
       .from("saved_articles AS rev")
@@ -28,13 +28,13 @@ const ReviewsService = {
       .first();
   },
 
-  insertReview(db, newReview) {
+  insertSavedArticle(db, newSavedArticle) {
     return db
-      .insert(newReview)
+      .insert(newSavedArticle)
       .into("saved_articles")
       .returning("*")
-      .then(([review]) => review)
-      .then((review) => ReviewsService.getById(db, review.id));
+      .then(([savedArticle]) => savedArticle)
+      .then((savedArticle) => SavedArticleService.getById(db, savedArticle.id));
   },
 
   serializeReview(review) {
@@ -49,4 +49,4 @@ const ReviewsService = {
   },
 };
 
-module.exports = ReviewsService;
+module.exports = SavedArticleService;
