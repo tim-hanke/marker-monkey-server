@@ -1,4 +1,4 @@
-CREATE TABLE saved_articles (
+CREATE TABLE user_articles (
     id SERIAL PRIMARY KEY,
     article_id INTEGER
         REFERENCES articles(id) ON DELETE CASCADE NOT NULL,

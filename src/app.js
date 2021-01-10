@@ -5,7 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const { NODE_ENV } = require("./config");
 const articlesRouter = require("./articles/articles-router");
-const savedArticlesRouter = require("./saved-articles/saved-articles-router");
+const userArticlesRouter = require("./user-articles/user-articles-router");
 const authRouter = require("./auth/auth-router");
 const usersRouter = require("./users/users-router");
 
@@ -20,7 +20,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/articles", articlesRouter);
-app.use("/api/savedarticles", savedArticlesRouter);
+app.use("/api/user/articles", userArticlesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 

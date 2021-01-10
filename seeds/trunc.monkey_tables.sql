@@ -1,5 +1,5 @@
 TRUNCATE
-  saved_articles,
+  user_articles,
   articles,
   users
   RESTART IDENTITY CASCADE;

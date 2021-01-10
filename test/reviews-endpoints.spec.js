@@ -53,7 +53,7 @@ describe("Reviews Endpoints", function () {
         })
         .expect((res) =>
           db
-            .from("saved_articles")
+            .from("user_articles")
             .select("*")
             .where({ id: res.body.id })
             .first()

@@ -1,9 +1,9 @@
 const xss = require("xss");
 
-const SavedArticleService = {
+const UserArticlesService = {
   getById(db, id) {
     return db
-      .from("saved_articles AS rev")
+      .from("user_articles AS rev")
       .select(
         "rev.id",
         "rev.rating",
@@ -31,10 +31,10 @@ const SavedArticleService = {
   insertSavedArticle(db, newSavedArticle) {
     return db
       .insert(newSavedArticle)
-      .into("saved_articles")
+      .into("user_articles")
       .returning("*")
       .then(([savedArticle]) => savedArticle)
-      .then((savedArticle) => SavedArticleService.getById(db, savedArticle.id));
+      .then((savedArticle) => UserArticlesService.getById(db, savedArticle.id));
   },
 
   serializeReview(review) {
@@ -49,4 +49,4 @@ const SavedArticleService = {
   },
 };
 
-module.exports = SavedArticleService;
+module.exports = UserArticlesService;

@@ -1,12 +1,12 @@
 const express = require("express");
 const path = require("path");
-const SavedArticlesService = require("./saved-articles-service");
+const UserArticlesService = require("./user-articles-service");
 const { requireAuth } = require("../middleware/jwt-auth");
 
-const savedArticlesRouter = express.Router();
+const userArticlesRouter = express.Router();
 const jsonBodyParser = express.json();
 
-savedArticlesRouter
+userArticlesRouter
   .route("/")
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { article_id } = req.body;
@@ -25,14 +25,14 @@ savedArticlesRouter
 
     newSavedArticle.user_id = req.user.id;
 
-    SavedArticlesService.insertSavedArticle(req.app.get("db"), newSavedArticle)
+    UserArticlesService.insertSavedArticle(req.app.get("db"), newSavedArticle)
       .then((savedArticle) => {
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${savedArticle.id}`))
-          .json(SavedArticlesService.serializeReview(savedArticle));
+          .json(UserArticlesService.serializeReview(savedArticle));
       })
       .catch(next);
   });
 
-module.exports = savedArticlesRouter;
+module.exports = userArticlesRouter;

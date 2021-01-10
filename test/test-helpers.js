@@ -197,7 +197,7 @@ function cleanTables(db) {
     `TRUNCATE
       articles,
       users,
-      saved_articles
+      user_articles
       RESTART IDENTITY CASCADE`
   );
 }
@@ -225,7 +225,7 @@ function seedArticlesTables(db, users, articles, reviews = []) {
       articles[articles.length - 1].id,
     ]); // only insert reviews if there are some, also update the sequence counter
     if (reviews.length) {
-      await trx.into("saved_articles").insert(reviews);
+      await trx.into("user_articles").insert(reviews);
       await trx.raw(`SELECT setval('saved_articles_id_seq', ?)`, [
         reviews[reviews.length - 1].id,
       ]);

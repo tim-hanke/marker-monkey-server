@@ -6,7 +6,7 @@ const ArticlesService = {
     return db
       .from("articles AS art")
       .select("art.id", "art.url", "art.image", "art.title", "art.description");
-    // .leftJoin("saved_articles AS sav", "art.id", "sav.article_id")
+    // .leftJoin("user_articles AS sav", "art.id", "sav.article_id")
     // .leftJoin("users AS usr", "art.user_id", "usr.id")
     // .groupBy("art.id", "usr.id");
   },
@@ -25,7 +25,7 @@ const ArticlesService = {
 
   getReviewsForThing(db, article_id) {
     return db
-      .from("saved_articles AS rev")
+      .from("user_articles AS rev")
       .select("rev.id", "rev.rating", "rev.text", "rev.date_created")
       .where("rev.article_id", article_id)
       .leftJoin("users AS usr", "rev.user_id", "usr.id")

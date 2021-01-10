@@ -1,7 +1,7 @@
 BEGIN;
 
 TRUNCATE
-  saved_articles,
+  user_articles,
   articles,
   users
   RESTART IDENTITY CASCADE;
@@ -19,7 +19,7 @@ VALUES
   ('4', 'https://github.com/airbnb/javascript', 'airbnb/javascript', 'JavaScript Style Guide. Contribute to airbnb/javascript development by creating an account on GitHub.', 'https://avatars0.githubusercontent.com/u/698437?s=400&amp;v=4'),
   ('5', 'https://catalins.tech/top-5-mistakes-i-made-as-a-junior-developer', 'Top 5 Mistakes I Made As A Junior Developer', 'In this article, I want to talk about the top five mistakes I made as a junior developer. They are not specific to my case, and many other developers have made the same mistakes. As a result, I want to put them in writing so that others can see and ...', 'https://hashnode.com/utility/r?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1608619713193%2F4C0_uyFry.jpeg%3Fw%3D1200%26h%3D630%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress');
 
-INSERT INTO saved_articles (article_id, user_id)
+INSERT INTO user_articles (article_id, user_id)
 VALUES
   (1, 1),
   (2, 1),
