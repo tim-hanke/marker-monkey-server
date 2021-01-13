@@ -12,7 +12,7 @@ const ArticlesService = {
   },
 
   getById(db, id) {
-    return ArticlesService.getAllArticles(db).where("art.id", id).first();
+    return this.getAllArticles(db).where("art.id", id).first();
   },
 
   getByUrl(db, url) {
@@ -20,7 +20,16 @@ const ArticlesService = {
   },
 
   getByUserId(id) {
-    return ArticlesService.getAllArticles(db).where("usr.id", id);
+    return this.getAllArticles(db).where("usr.id", id);
+  },
+
+  insertArticle(db, newArticle) {
+    return db
+      .insert(newArticle)
+      .into("articles")
+      .returning("*")
+      .then(([article]) => article)
+      .then((article) => this.getById(db, article.id));
   },
 
   getReviewsForThing(db, article_id) {

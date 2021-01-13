@@ -30,7 +30,7 @@ userArticlesRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${userArticle.id}`))
-          .json(UserArticlesService.serializeReview(userArticle));
+          .json(userArticle);
       })
       .catch(next);
   });
