@@ -1,4 +1,11 @@
 const express = require("express");
+const metascraper = require("metascraper")([
+  require("metascraper-url")(),
+  require("metascraper-image")(),
+  require("metascraper-title")(),
+  require("metascraper-description")(),
+]);
+const got = require("got");
 const ArticlesService = require("./articles-service");
 const UserArticlesService = require("../user-articles/user-articles-service");
 const { requireAuth } = require("../middleware/jwt-auth");
@@ -25,19 +32,22 @@ router
     // 2. insert new article into articles table
     // insert new row into user_articles with article_id and user_id
     try {
-      const { url, user_id } = req.body;
-      let article = await ArticlesService.getByUrl(req.app.get("db"), url);
+      const { target_url, user_id } = req.body;
+      let article = await ArticlesService.getByUrl(
+        req.app.get("db"),
+        target_url
+      );
       if (!article) {
         // if article/URL isn't in articles table
-        // 1. article = await getArticleDate(url)
+        // 1. article = await getArticleData(url)
         // 2. ArticlesService.insertArticle(article) (TODO: make this function)
-        articleData = {
-          url: url,
-          title: "Step-by-step guide to contributing on GitHub",
-          description:
-            "Learn the exact process I use when contributing to an open source project on GitHub. Follow this detailed visual guide to make your first contribution TODAY!",
-          image:
-            "https://www.dataschool.io/content/images/2020/06/diagram-02-1.png",
+        const { body: html, url } = await got(target_url);
+        const metadata = await metascraper({ html, url });
+        const articleData = {
+          url: metadata.url,
+          title: metadata.title,
+          description: metadata.description,
+          image: metadata.image,
         };
         article = await ArticlesService.insertArticle(
           req.app.get("db"),
