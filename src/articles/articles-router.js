@@ -32,28 +32,33 @@ router
     // 2. insert new article into articles table
     // insert new row into user_articles with article_id and user_id
     try {
-      const { target_url, user_id } = req.body;
+      const { target_url } = req.body;
+      const { id: user_id } = req.user;
       let article = await ArticlesService.getByUrl(
         req.app.get("db"),
         target_url
       );
+      // if article exists, check if user article exists
+      if (article) {
+        const userArticle = await UserArticlesService.getByUserAndArticleId(
+          req.app.get("db"),
+          user_id,
+          article.id
+        );
+        if (userArticle) {
+          return res.status(200).json({});
+        }
+      }
       if (!article) {
         // if article/URL isn't in articles table
         // 1. article = await getArticleData(url)
-        // 2. ArticlesService.insertArticle(article) (TODO: make this function)
+        // 2. ArticlesService.insertArticle(article)
         const { body: html, url } = await got(target_url);
-        const metadata = await metascraper({ html, url });
-        const articleData = {
-          url: metadata.url,
-          title: metadata.title,
-          description: metadata.description,
-          image: metadata.image,
-        };
+        const articleData = await metascraper({ html, url });
         article = await ArticlesService.insertArticle(
           req.app.get("db"),
           articleData
         );
-        console.log("inserted article", article);
       }
       const newUserArticle = {
         article_id: article.id,
@@ -63,8 +68,7 @@ router
         req.app.get("db"),
         newUserArticle
       );
-      console.log("inserted user_article", inserted);
-      res.sendStatus(200);
+      res.status(201).json({});
     } catch (err) {
       next(err);
     }
