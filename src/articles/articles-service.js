@@ -19,8 +19,10 @@ const ArticlesService = {
     return this.getAllArticles(db).where("art.url", url).first();
   },
 
-  getByUserId(id) {
-    return this.getAllArticles(db).where("usr.id", id);
+  getArticlesByUserId(db, userId) {
+    return this.getAllArticles(db)
+      .join("user_articles AS ua", "art.id", "ua.article_id")
+      .where("ua.user_id", userId);
   },
 
   insertArticle(db, newArticle) {

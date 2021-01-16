@@ -18,7 +18,10 @@ router
   .all(requireAuth)
   .get(async (req, res, next) => {
     try {
-      const articles = await ArticlesService.getAllArticles(req.app.get("db"));
+      const articles = await ArticlesService.getArticlesByUserId(
+        req.app.get("db"),
+        req.user.id
+      );
 
       res.json(ArticlesService.serializeArticles(articles));
     } catch (err) {
