@@ -16,6 +16,15 @@ app.use(
     skip: () => NODE_ENV === "test",
   })
 );
+
+// TODO: decide if I need to make the client origin configurable,
+// like so:
+// const {CLIENT_ORIGIN} = require('./config');
+// app.use(
+//     cors({
+//         origin: CLIENT_ORIGIN
+//     })
+// );
 app.use(cors());
 app.use(helmet());
 

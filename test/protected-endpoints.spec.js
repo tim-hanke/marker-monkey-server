@@ -32,18 +32,13 @@ describe.only("Protected endpoints", function () {
 
   const protectedEndpoints = [
     {
-      name: "GET /api/articles/:article_id",
-      path: "/api/articles/1",
+      name: "GET /api/articles/",
+      path: "/api/articles/",
       method: supertest(app).get,
     },
     {
-      name: "GET /api/articles/:article_id/reviews",
-      path: "/api/articles/1/reviews",
-      method: supertest(app).get,
-    },
-    {
-      name: "POST /api/savedarticles",
-      path: "/api/savedarticles",
+      name: "POST /api/articles",
+      path: "/api/articles",
       method: supertest(app).post,
     },
   ];
