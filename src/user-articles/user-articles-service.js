@@ -7,13 +7,13 @@ const UserArticlesService = {
       .first();
   },
 
-  getByUserAndArticleId(db, user_id, article_id) {
+  getByUserAndArticleId(db, userId, articleId) {
     return db
       .from("user_articles AS ua")
       .select("ua.id", "ua.user_id", "ua.article_id")
       .where({
-        "ua.user_id": user_id,
-        "ua.article_id": article_id,
+        "ua.user_id": userId,
+        "ua.article_id": articleId,
       })
       .first();
   },
@@ -25,6 +25,18 @@ const UserArticlesService = {
       .returning("*")
       .then(([userArticle]) => userArticle)
       .then((userArticle) => this.getById(db, userArticle.id));
+  },
+
+  deleteUserArticle(db, userId, articleId) {
+    return db
+      .from("user_articles")
+      .where({
+        user_id: userId,
+        article_id: articleId,
+      })
+      .returning("id")
+      .del()
+      .then(([userArticle]) => userArticle);
   },
 };
 

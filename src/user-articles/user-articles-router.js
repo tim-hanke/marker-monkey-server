@@ -8,7 +8,8 @@ const jsonBodyParser = express.json();
 
 userArticlesRouter
   .route("/")
-  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+  .all(requireAuth)
+  .post(jsonBodyParser, (req, res, next) => {
     const { article_id } = req.body;
     if (!article_id) {
       return res
@@ -16,12 +17,6 @@ userArticlesRouter
         .json({ error: "Missing article_id in request body" });
     }
     const newUserArticle = { article_id };
-
-    // for (const [key, value] of Object.entries(newReview))
-    //   if (value == null)
-    //     return res.status(400).json({
-    //       error: `Missing '${key}' in request body`,
-    //     });
 
     newUserArticle.user_id = req.user.id;
 
@@ -33,6 +28,36 @@ userArticlesRouter
           .json(userArticle);
       })
       .catch(next);
+  })
+  .delete(jsonBodyParser, async (req, res, next) => {
+    const { article_id: articleId } = req.body;
+    if (!articleId) {
+      return res
+        .status(400)
+        .json({ error: "Missing article_id in request body" });
+    }
+
+    const userId = req.user.id;
+
+    const exists = await UserArticlesService.getByUserAndArticleId(
+      req.app.get("db"),
+      userId,
+      articleId
+    );
+    if (!exists) {
+      return res.sendStatus(404);
+    }
+
+    try {
+      const deletedId = await UserArticlesService.deleteUserArticle(
+        req.app.get("db"),
+        userId,
+        articleId
+      );
+      return res.status(200).json({ id: deletedId });
+    } catch (err) {
+      next(err);
+    }
   });
 
 module.exports = userArticlesRouter;

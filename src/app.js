@@ -29,7 +29,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use("/api/articles", articlesRouter);
-app.use("/api/user/articles", userArticlesRouter);
+app.use("/api/user_articles", userArticlesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 
