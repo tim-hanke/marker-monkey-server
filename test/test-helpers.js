@@ -34,7 +34,7 @@ function makeArticlesArray() {
   return [
     {
       id: 1,
-      url: "https://www.test.com",
+      url: "https://www.test1.com",
       title: "First test article!",
       image: "http://placehold.it/500x500",
       description:
@@ -42,7 +42,7 @@ function makeArticlesArray() {
     },
     {
       id: 2,
-      url: "https://www.test.com",
+      url: "https://www.test2.com",
       title: "Second test article!",
       image: "http://placehold.it/500x500",
       description:
@@ -50,7 +50,7 @@ function makeArticlesArray() {
     },
     {
       id: 3,
-      url: "https://www.test.com",
+      url: "https://www.test3.com",
       title: "Third test article!",
       image: "http://placehold.it/500x500",
       description:
@@ -58,7 +58,7 @@ function makeArticlesArray() {
     },
     {
       id: 4,
-      url: "https://www.test.com",
+      url: "https://www.test4.com",
       title: "Fourth test article!",
       image: "http://placehold.it/500x500",
       description:

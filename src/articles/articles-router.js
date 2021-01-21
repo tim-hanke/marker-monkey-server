@@ -49,7 +49,7 @@ router
           article.id
         );
         if (userArticle) {
-          return res.status(200).json({});
+          return res.status(200).json(userArticle);
         }
       }
       if (!article) {
@@ -67,11 +67,11 @@ router
         article_id: article.id,
         user_id: user_id,
       };
-      const inserted = await UserArticlesService.insertUserArticle(
+      const insertedUserArticle = await UserArticlesService.insertUserArticle(
         req.app.get("db"),
         newUserArticle
       );
-      res.status(201).json({});
+      res.status(201).json(insertedUserArticle);
     } catch (err) {
       next(err);
     }
