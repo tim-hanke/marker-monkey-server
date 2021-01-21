@@ -30,7 +30,7 @@ function makeUsersArray() {
   ];
 }
 
-function makeArticlesArray(users) {
+function makeArticlesArray() {
   return [
     {
       id: 1,
@@ -67,7 +67,7 @@ function makeArticlesArray(users) {
   ];
 }
 
-function makeSavedArticlesArray(users, articles) {
+function makeUserArticlesArray(users, articles) {
   return [
     {
       id: 1,
@@ -91,7 +91,7 @@ function makeSavedArticlesArray(users, articles) {
     },
     {
       id: 5,
-      article_id: articles[articles.length - 1].id,
+      article_id: articles[articles.length - 2].id,
       user_id: users[0].id,
     },
     {
@@ -107,31 +107,12 @@ function makeSavedArticlesArray(users, articles) {
   ];
 }
 
-function makeExpectedArticle(users, article, reviews = []) {
-  const user = users.find((user) => user.id === article.user_id);
-
-  const thingReviews = reviews.filter(
-    (review) => review.article_id === article.id
+function makeExpectedArticle(user, article, userArticles = []) {
+  const filteredUserArticles = userArticles.filter(
+    (ua) => ua.user_id === user.id
   );
 
-  const number_of_reviews = thingReviews.length;
-  const average_review_rating = calculateAverageReviewRating(thingReviews);
-
-  return {
-    id: article.id,
-    image: article.image,
-    title: article.title,
-    description: article.description,
-    date_created: article.date_created,
-    number_of_reviews,
-    average_review_rating,
-    user: {
-      id: user.id,
-      user_name: user.user_name,
-      full_name: user.full_name,
-      date_created: user.date_created,
-    },
-  };
+  return filteredUserArticles.find((a) => a.article_id === article.id);
 }
 
 function calculateAverageReviewRating(reviews) {
@@ -164,17 +145,16 @@ function makeExpectedArticleReviews(users, thingId, reviews) {
   });
 }
 
-function makeMaliciousArticle(user) {
+function makeMaliciousArticle() {
   const maliciousArticle = {
     id: 911,
+    url: "http://www.test.com",
     image: "http://placehold.it/500x500",
-    date_created: new Date().toISOString(),
     title: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    user_id: user.id,
     description: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
   };
   const expectedArticle = {
-    ...makeExpectedArticle([user], maliciousArticle),
+    ...maliciousArticle,
     title:
       'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
     description: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
@@ -187,9 +167,9 @@ function makeMaliciousArticle(user) {
 
 function makeArticlesFixtures() {
   const testUsers = makeUsersArray();
-  const testArticles = makeArticlesArray(testUsers);
-  const testReviews = makeSavedArticlesArray(testUsers, testArticles);
-  return { testUsers, testArticles, testReviews };
+  const testArticles = makeArticlesArray();
+  const testUserArticles = makeUserArticlesArray(testUsers, testArticles);
+  return { testUsers, testArticles, testUserArticles };
 }
 
 function cleanTables(db) {
@@ -215,7 +195,7 @@ function seedUsers(db, users) {
     );
 }
 
-function seedArticlesTables(db, users, articles, reviews = []) {
+function seedArticlesTables(db, users, articles, userArticles = []) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async (trx) => {
     await seedUsers(trx, users);
@@ -223,20 +203,25 @@ function seedArticlesTables(db, users, articles, reviews = []) {
     // update the auto sequence to match the forced id values
     await trx.raw(`SELECT setval('articles_id_seq', ?)`, [
       articles[articles.length - 1].id,
-    ]); // only insert reviews if there are some, also update the sequence counter
-    if (reviews.length) {
-      await trx.into("user_articles").insert(reviews);
-      await trx.raw(`SELECT setval('saved_articles_id_seq', ?)`, [
-        reviews[reviews.length - 1].id,
+    ]);
+    // only insert userArticles if there are some, also update the sequence counter
+    if (userArticles.length) {
+      await trx.into("user_articles").insert(userArticles);
+      await trx.raw(`SELECT setval('user_articles_id_seq', ?)`, [
+        userArticles[userArticles.length - 1].id,
       ]);
     }
   });
 }
 
 function seedMaliciousArticle(db, user, article) {
-  return seedUsers(db, [user]).then(() =>
-    db.into("articles").insert([article])
-  );
+  return seedUsers(db, [user]).then(() => {
+    db.into("articles").insert([article]);
+    db.into("user_articles").insert({
+      user_id: user.id,
+      article_id: article.id,
+    });
+  });
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
@@ -253,7 +238,7 @@ module.exports = {
   makeExpectedArticle,
   makeExpectedArticleReviews,
   makeMaliciousArticle,
-  makeReviewsArray: makeSavedArticlesArray,
+  makeUserArticlesArray,
 
   makeArticlesFixtures,
   cleanTables,

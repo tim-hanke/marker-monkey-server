@@ -27,7 +27,10 @@ const UsersService = {
       .then((user) => Boolean(user));
   },
   async insertUser(db, newUser) {
-    const [user] = await db.insert(newUser).into("users").returning("*");
+    const [user] = await db
+      .insert(newUser)
+      .into("users")
+      .returning(["id", "user_name", "full_name"]);
     return user;
   },
   serializeUser(user) {
