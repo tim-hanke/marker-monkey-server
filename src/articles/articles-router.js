@@ -56,7 +56,14 @@ router
         // if article/URL isn't in articles table
         // 1. article = await getArticleData(url)
         // 2. ArticlesService.insertArticle(article)
-        const { body: html, url } = await got(target_url);
+        let html, url;
+        try {
+          ({ body: html, url } = await got(target_url));
+        } catch (err) {
+          return res.status(400).json({
+            error: "We couldn't access this URL. Please make sure it is valid.",
+          });
+        }
         const articleData = await metascraper({ html, url });
         article = await ArticlesService.insertArticle(
           req.app.get("db"),
