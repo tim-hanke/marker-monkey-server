@@ -41,6 +41,11 @@ describe("Protected endpoints", function () {
       path: "/api/articles",
       method: supertest(app).post,
     },
+    {
+      name: "DELETE /api/user_articles",
+      path: "/api/user_articles",
+      method: supertest(app).del,
+    },
   ];
 
   protectedEndpoints.forEach((endpoint) => {
