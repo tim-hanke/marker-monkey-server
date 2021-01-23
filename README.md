@@ -76,12 +76,12 @@ timezone = 'UTC'
 #timezone_abbreviations = 'Default'     # Select the set of available time zone
 ```
 
-## Sample Data
+### Sample Data
 
 - To seed the database for development: `psql -U monkey -d monkey -a -f seeds/seed.monkey_tables.sql`
 - To clear seed data: `psql -U monkey -d monkey -a -f seeds/trunc.monkey_tables.sql`
 
-## Scripts
+### Scripts
 
 - Start application for development: `npm run dev`
 - Run tests: `npm test`
