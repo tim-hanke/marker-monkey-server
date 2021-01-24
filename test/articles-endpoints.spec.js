@@ -56,38 +56,6 @@ describe("Articles Endpoints", function () {
           .expect(200, expectedArticles);
       });
     });
-
-    context.skip(`Given an XSS attack thing`, () => {
-      // // const testUser = helpers.makeUsersArray()[0];
-      // const {
-      //   maliciousArticle,
-      //   expectedArticle,
-      // } = helpers.makeMaliciousArticle();
-      // // const malicousTestArticles = testArticles;
-      // // malicousTestArticles[0] = maliciousArticle;
-      // before("insert articles", () =>
-      //   helpers.seedArticlesTables(
-      //     db,
-      //     testUsers,
-      //     malicousTestArticles,
-      //     testUserArticles
-      //   )
-      // );
-      // // beforeEach("insert malicious article", () => {
-      // //   return helpers.seedMaliciousArticle(db, testUser, maliciousArticle);
-      // // });
-      // it("removes XSS attack content", () => {
-      //   return supertest(app)
-      //     .get(`/api/articles`)
-      //     .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-      //     .expect(200)
-      //     .expect((res) => {
-      //       console.table(res);
-      //       expect(res.body[0].title).to.eql(expectedArticle.title);
-      //       expect(res.body[0].description).to.eql(expectedArticle.description);
-      //     });
-      // });
-    });
   });
 
   describe(`POST /api/articles`, () => {
@@ -102,7 +70,6 @@ describe("Articles Endpoints", function () {
       );
 
       it("responds with 201 and user_articles object, and inserts into db", () => {
-        // https://www.howstuffworks.com/
         return supertest(app)
           .post("/api/articles")
           .send({ target_url: "https://www.howstuffworks.com/" })

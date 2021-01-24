@@ -34,15 +34,6 @@ const ArticlesService = {
       .then((article) => this.getById(db, article.id));
   },
 
-  getReviewsForThing(db, article_id) {
-    return db
-      .from("user_articles AS rev")
-      .select("rev.id", "rev.rating", "rev.text", "rev.date_created")
-      .where("rev.article_id", article_id)
-      .leftJoin("users AS usr", "rev.user_id", "usr.id")
-      .groupBy("rev.id", "usr.id");
-  },
-
   serializeArticles(articles) {
     return articles.map(this.serializeArticle);
   },
@@ -63,36 +54,6 @@ const ArticlesService = {
       description: xss(articleData.description),
     };
   },
-
-  serializeThingReviews(reviews) {
-    return reviews.map(this.serializeThingReview);
-  },
-
-  serializeThingReview(review) {
-    const reviewTree = new Treeize();
-
-    // Some light hackiness to allow for the fact that `treeize`
-    // only accepts arrays of objects, and we want to use a single
-    // object.
-    const reviewData = reviewTree.grow([review]).getData()[0];
-
-    return {
-      id: reviewData.id,
-      rating: reviewData.rating,
-      article_id: reviewData.article_id,
-      text: xss(reviewData.text),
-      user: reviewData.user || {},
-      date_created: reviewData.date_created,
-    };
-  },
 };
-
-const userFields = [
-  "usr.id AS user:id",
-  "usr.user_name AS user:user_name",
-  "usr.full_name AS user:full_name",
-  "usr.date_created AS user:date_created",
-  "usr.date_modified AS user:date_modified",
-];
 
 module.exports = ArticlesService;

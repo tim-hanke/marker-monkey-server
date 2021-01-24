@@ -115,36 +115,6 @@ function makeExpectedArticle(user, article, userArticles = []) {
   return filteredUserArticles.find((a) => a.article_id === article.id);
 }
 
-function calculateAverageReviewRating(reviews) {
-  if (!reviews.length) return 0;
-
-  const sum = reviews.map((review) => review.rating).reduce((a, b) => a + b);
-
-  return Math.round(sum / reviews.length);
-}
-
-function makeExpectedArticleReviews(users, thingId, reviews) {
-  const expectedReviews = reviews.filter(
-    (review) => review.article_id === thingId
-  );
-
-  return expectedReviews.map((review) => {
-    const reviewUser = users.find((user) => user.id === review.user_id);
-    return {
-      id: review.id,
-      text: review.text,
-      rating: review.rating,
-      date_created: review.date_created,
-      user: {
-        id: reviewUser.id,
-        user_name: reviewUser.user_name,
-        full_name: reviewUser.full_name,
-        date_created: reviewUser.date_created,
-      },
-    };
-  });
-}
-
 function makeMaliciousArticle() {
   const maliciousArticle = {
     id: 911,
@@ -236,10 +206,8 @@ module.exports = {
   makeUsersArray,
   makeArticlesArray,
   makeExpectedArticle,
-  makeExpectedArticleReviews,
   makeMaliciousArticle,
   makeUserArticlesArray,
-
   makeArticlesFixtures,
   cleanTables,
   seedArticlesTables,
