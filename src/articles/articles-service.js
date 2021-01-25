@@ -1,14 +1,12 @@
 const xss = require("xss");
 const Treeize = require("treeize");
 
+// methods for retrieving and inserting into articles table
 const ArticlesService = {
   getAllArticles(db) {
     return db
       .from("articles AS art")
       .select("art.id", "art.url", "art.image", "art.title", "art.description");
-    // .leftJoin("user_articles AS sav", "art.id", "sav.article_id")
-    // .leftJoin("users AS usr", "art.user_id", "usr.id")
-    // .groupBy("art.id", "usr.id");
   },
 
   getById(db, id) {

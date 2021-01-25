@@ -17,6 +17,9 @@ router
   .route("/")
   .all(requireAuth)
   .get(async (req, res, next) => {
+    // returns all articles saved by the current user, using
+    // the user object that is placed on the req by requireAuth
+    // middleware
     try {
       const articles = await ArticlesService.getArticlesByUserId(
         req.app.get("db"),
@@ -30,7 +33,7 @@ router
   })
   .post(jsonBodyParser, async (req, res, next) => {
     // find an existing article based on the URL
-    // if no, create new articles
+    // if not found, create new article
     // 1. fetch site metadata
     // 2. insert new article into articles table
     // insert new row into user_articles with article_id and user_id
@@ -42,6 +45,7 @@ router
         target_url
       );
       // if article exists, check if user article exists
+      // if both already exist, return success code
       if (article) {
         const userArticle = await UserArticlesService.getByUserAndArticleId(
           req.app.get("db"),
@@ -53,9 +57,9 @@ router
         }
       }
       if (!article) {
-        // if article/URL isn't in articles table
-        // 1. article = await getArticleData(url)
-        // 2. ArticlesService.insertArticle(article)
+        // if article/URL isn't in articles table,
+        // get the page metadata using metascraper and
+        // insert it into the article table
         let html, url;
         try {
           ({ body: html, url } = await got(target_url));
@@ -70,6 +74,8 @@ router
           articleData
         );
       }
+      // create a new entry in user_articles table to link
+      // the article with the current user
       const newUserArticle = {
         article_id: article.id,
         user_id: user_id,

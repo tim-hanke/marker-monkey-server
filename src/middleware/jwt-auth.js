@@ -1,5 +1,7 @@
 const AuthService = require("../auth/auth-service");
 
+// check the provided JSON Web Token against our users table
+// and if valid, pass the user object on to the next function
 function requireAuth(req, res, next) {
   const authToken = req.get("Authorization") || "";
 

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const xss = require("xss");
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
+// methods for validating new user info and inserting into users table
 const UsersService = {
   validatePassword(password) {
     if (password.length < 8) {

@@ -10,6 +10,10 @@ userArticlesRouter
   .route("/")
   .all(requireAuth)
   .delete(jsonBodyParser, async (req, res, next) => {
+    // look for an entry in user_articles table containing
+    // the logged-in user and the the article_id passed in
+    // the body. If found, delete that row from the db
+    // and return the deleted id as confirmation.
     const { article_id: articleId } = req.body;
     if (!articleId) {
       return res

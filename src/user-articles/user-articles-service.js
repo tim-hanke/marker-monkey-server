@@ -1,3 +1,4 @@
+// methods for retrieving and inserting rows into user_articles table
 const UserArticlesService = {
   getById(db, id) {
     return db

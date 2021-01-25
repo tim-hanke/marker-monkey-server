@@ -5,6 +5,9 @@ const authRouter = express.Router();
 const jsonBodyParser = express.json();
 
 authRouter.post("/login", jsonBodyParser, async (req, res, next) => {
+  // compare the user_name and password provided to our
+  // list of users and corresponding password (which are
+  // hashed with bcrypt), and return a JSON Web Token
   const { user_name, password } = req.body;
   const loginUser = { user_name, password };
 

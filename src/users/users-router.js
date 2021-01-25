@@ -6,6 +6,11 @@ const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 
 usersRouter.post("/", jsonBodyParser, async (req, res, next) => {
+  // for creating a new user
+  // 1. check that the user_name doesn't already exist
+  // 2. check the password meets complexity requirements
+  // 3. hash the password using bcrypt
+  // 4. store the new user info in users table
   for (const field of ["full_name", "user_name", "password"]) {
     if (!req.body[field]) {
       return res
