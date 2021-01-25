@@ -18,6 +18,8 @@ After registering for an account, a user can bookmark a webpage by pasting an UR
 
 ## Technical Details
 
+This project was created with [Node.js](https://nodejs.org/), using [Express](http://expressjs.com/) and [PostgreSQL](https://www.postgresql.org/).
+
 ### Endpoints
 
 #### `POST /api/users`
